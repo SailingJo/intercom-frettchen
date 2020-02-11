@@ -42,7 +42,7 @@
                 const mediaRecorder = new MediaRecorder(stream);
                 var audioChunks = [];
 
-                document.getElementById("rec").addEventListener("click", () => {
+                const record = () => {
                     if (mediaRecorder.state == "inactive") {
                         mediaRecorder.start()
                         document.getElementById("mic").src = "/mic-empty.svg";
@@ -52,6 +52,17 @@
                         document.getElementById("mic").src = "/mic.svg";
                         document.getElementById("rec").style.backgroundColor = "#2ecc71";
                     }
+                }
+
+                document.addEventListener("keydown", (event) => {
+                    if (event.code == "Space") { 
+                        event.preventDefault();
+                        record(); 
+                    }
+                });
+
+                document.getElementById("rec").addEventListener("click", () => {
+                    record();
                 });
 
                 mediaRecorder.addEventListener("dataavailable", event => {
