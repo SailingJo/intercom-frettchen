@@ -1,0 +1,25 @@
+{
+  "name": "intercom-frettchen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SailingJo/intercom-frettchen.git"
+  },
+  "author": "Jesper-Ole Wehrsig & David Penkowoj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SailingJo/intercom-frettchen/issues"
+  },
+  "homepage": "https://github.com/SailingJo/intercom-frettchen#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^4.17.1",
+    "ip": "^1.1.5",
+    "socket.io": "^2.3.0"
+  }
+}

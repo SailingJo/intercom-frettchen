@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+
+<html lang="de">
+
+<head>
+    <title>Intercom Frettchen</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/index.css">
+</head>
+
+<body>
+    <noscript>Ihr Browser unterstützt einige Features dieser Seite nicht!</noscript>
+    <img id="logo" src="/frettchen.png">
+    <h1>Intercom Frettchen</h1>
+    <h2>Rechte bei Jesper-Ole Wehrsig & David Penkowoj</h2>
+    <p id="usercount"></p>
+    <button id="rec"><img id="mic" src="/mic.svg"></button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        const socket = io("https://localhost:3000");
+        const filter = {
+            video: false,
+            audio: true
+        };
+
+        socket.on("users", (usercount) => {
+            document.getElementById("usercount").innerText = "Online: " + usercount.toString();
+        });
+
+        socket.on("audioMessage", (audioChunks) => {
+            const audioBlob = new Blob(audioChunks);
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+
+            audio.play();
+        });
+
+        navigator.mediaDevices.getUserMedia(filter)
+            .then(stream => {
+                const mediaRecorder = new MediaRecorder(stream);
+                var audioChunks = [];
+
+                document.getElementById("rec").addEventListener("click", () => {
+                    if (mediaRecorder.state == "inactive") {
+                        mediaRecorder.start()
+                        document.getElementById("mic").src = "/mic-empty.svg";
+                        document.getElementById("rec").style.backgroundColor = "#e74c3c";
+                    } else {
+                        mediaRecorder.stop()
+                        document.getElementById("mic").src = "/mic.svg";
+                        document.getElementById("rec").style.backgroundColor = "#2ecc71";
+                    }
+                });
+
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    audioChunks.push(event.data);
+                });
+
+                mediaRecorder.addEventListener("stop", () => {
+                    socket.emit("audioMessage", audioChunks);
+                    audioChunks = [];
+                });
+            });
+    </script>
+</body>
+
+</html>
